@@ -1,0 +1,18 @@
+galaxy_info:
+  role_name: virgo_config
+  author: sara.vallero AT to.infn.it
+  description: "Configure host for Virgo base cluster."
+  company: INDIGO-DataCloud
+  license: Apache
+  min_ansible_version: 2.0
+  github_branch: virgo_dev
+  platforms:
+  - name: Ubuntu
+    versions:
+    - trusty
+  galaxy_tags: 
+   - virgo
+   - cvmfs
+
+dependencies:
+  - { role: indigo-dc.htcondor_config }

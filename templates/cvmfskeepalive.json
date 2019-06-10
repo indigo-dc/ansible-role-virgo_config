@@ -1,0 +1,30 @@
+{
+  "id": "/cvmfskeepalive",
+  "cmd": "clean_cvmfs ()\n{\n    echo \"[cvmfs_keepalive]-> ERROR\" ;\n    echo \"[cvmfs_keepalive]-> RESET CVMFS\" ;\n    cvmfs_config killall ;\n    cvmfs_config umount ;\n    cvmfs_config wipecache ;\n\n    echo \"[cvmfs_keepalive]-> RESET CVMFS LOG\" ;\n    echo \"\" > /var/log/cvmfs.log ;\n\n    echo \"[cvmfs_keepalive]-> MOUNT REPOSITORIES\" ;\n    repositories=$(cvmfs_config showconfig | /bin/grep CVMFS_REPOSITORY_NAME) ;\n    repositories_list=$(echo $repositories | sed -e 's/CVMFS\\_REPOSITORY\\_NAME\\=//g') ;\n\n    for i in $repositories_list ;\n    do\n        echo \"[cvmfs_keepalive]-> MOUNT $i\" ;\n        mount -t cvmfs \"$i\" \"/cvmfs/$i\" ;\n    done\n};\n\nwhile true;\ndo\n\n    output=$(timeout --preserve-status 5 cvmfs_config probe) ;\n\n    if [ \"$?\" != \"0\" ]; \n    then\n        clean_cvmfs ;\n    elif (echo $output | grep -q Failed); \n    then\n        clean_cvmfs ;\n    else \n        echo \"[cvmfs_keepalive]-> OK\" ;\n    fi\n\n    sleep 60 ;\n\ndone",
+  "cpus": 0.1,
+  "mem": 32,
+  "disk": 0,
+  "instances": 0,
+  "constraints": [
+    [
+      "hostname",
+      "UNIQUE"
+    ]
+  ],
+  "acceptedResourceRoles": [
+    "*"
+  ],
+  "healthChecks": [
+    {
+      "gracePeriodSeconds": 300,
+      "intervalSeconds": 60,
+      "timeoutSeconds": 20,
+      "maxConsecutiveFailures": 3,
+      "delaySeconds": 15,
+      "command": {
+        "value": "/usr/bin/cvmfs_config probe"
+      },
+      "protocol": "COMMAND"
+    }
+  ]
+}

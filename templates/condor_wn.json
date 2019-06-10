@@ -1,0 +1,37 @@
+{
+  "id": "condorwn",
+  "cpus": {{htcondor_docker_cpu_x_wn}},
+  "mem": {{htcondor_docker_ram_x_wn}},
+  "instances": {{htcondor_initial_number_of_slaves}},
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "{{htcondor_config_condor_image}}",
+      "forcePullImage": true,
+      "privileged": true,
+      "network": "BRIDGE"
+    },
+    "volumes": [
+      {
+          "containerPath": "/cvmfs",
+          "hostPath": "/cvmfs",
+          "mode": "RW"
+      }
+    ]
+  },
+  "healthChecks": [],
+  "env": {
+    "CONDOR_HOST": "{{ condor_host }}",
+    "SLOT_TYPE_1": "cpus={{htcondor_cpu_x_wn}}, mem={{htcondor_ram_x_wn}}",
+    "ZOOKEEPER_HOST_LIST": "{{ zookeeper_peers }}",
+    "CCB_ADDRESS": "{{ ccb_address }}",
+    "PROXY_CACHE": "{{ proxycache_host }}:{{config_proxycache_serviceport}}"
+  },
+  "args": [
+    "wn"
+  ],
+  "constraints": [
+    ["ccb", "UNLIKE", "True"],
+    ["schedd", "UNLIKE", "True"]
+  ]
+}

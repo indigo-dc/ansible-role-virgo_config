@@ -1,0 +1,39 @@
+---
+# marathon default variables
+
+marathon_port: 8443
+marathon_protocol: https
+
+# Mandatory Variables
+#htcondor_config_schedd_ip: MANDATORY - NO DEFAULT AVAILABLE
+
+#virgo_config_cvmfs_public_key: MANDATORY - NO DEFAULT AVAILABLE
+#virgo_cvmfs_repo: NO DEFAULT AVAILABLE
+
+# Squid and CVMFS
+virgo_config_cvmfs_default_http_proxy: "http://{{virgo_default_squid}}:{{virgo_default_squid_port}}"
+virgo_config_cvmfs_repositories: "virgo.test.to.infn.it"
+
+virgo_config_mysquid_host: "localhost"
+virgo_default_squid_port: 3128
+virgo_config_mysquid: "http://{{virgo_default_squid}}:{{virgo_default_squid_port}}"
+
+virgo_config_cvmfs_repo:
+  server_url: "{{virgo_repo_server_url}}"
+  public_key_path: "{{virgo_repo_public_key_path}}"
+  repository_name: "{{virgo_repo_repository_name}}"
+  public_key: "{{virgo_repo_public_key}}"
+  public_key_url: "{{virgo_repo_public_key_url}}"
+
+virgo_config_cvmfs_debug: False
+
+virgo_config_squid_image: "spiga/frontiersquidv1"
+
+# Condor image and parameters
+htcondor_config_condor_image: "dodasts/virgo"
+virgo_number_of_slaves: 2
+number_of_wn_instances: 1
+virgo_cpu_x_wn: 1
+virgo_ram_x_wn: 2000
+virgo_docker_cpu_x_wn: 0.98
+virgo_docker_ram_x_wn: 1999.98

@@ -1,0 +1,8 @@
+---
+
+- include: cvmfs-config.yml
+  when: (virgo_config_node is defined) and (virgo_config_node == "wn")
+- include: start-virgo-apps.yml
+  when: (virgo_config_node is defined) and (virgo_config_node == "master")
+- include: start-wn-apps.yml
+  when: (virgo_config_node is defined) and (virgo_config_node == "execute")
