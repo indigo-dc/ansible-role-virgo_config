@@ -7,7 +7,7 @@
   tags: virgo_config
 
 - name: Install cvmfs packages
-  apt: name={{item}} state=present update_cache=yes
+  apt: name={{ item }} state=present update_cache=yes
   with_items:
        - cvmfs
        - cvmfs-config-default
@@ -62,9 +62,9 @@
     dest: /etc/cvmfs/default.local
     create: yes
     content: |
-      CVMFS_HTTP_PROXY={{virgo_config_cvmfs_default_http_proxy}}
-      CVMFS_REPOSITORIES={{virgo_config_cvmfs_repositories}}
-  when: virgo_config_cvmfs_repo.repository_name == ""
+      CVMFS_HTTP_PROXY={{ virgo_config_cvmfs_default_http_proxy }}
+      CVMFS_REPOSITORIES={{ virgo_config_cvmfs_repositories }}
+  when: not virgo_config_cvmfs_repo.repository_name
   tags: virgo_config
 
 - name: create/update file /etc/cvmfs/default.local with defined virgo repo
@@ -72,38 +72,38 @@
     dest: /etc/cvmfs/default.local
     create: yes
     content: |
-      CVMFS_HTTP_PROXY={{virgo_config_cvmfs_default_http_proxy}}
-      CVMFS_REPOSITORIES={{virgo_config_cvmfs_repositories}},{{virgo_config_cvmfs_repo.repository_name}}
-  when: virgo_config_cvmfs_repo.repository_name != ""
+      CVMFS_HTTP_PROXY={{ virgo_config_cvmfs_default_http_proxy }}
+      CVMFS_REPOSITORIES={{ virgo_config_cvmfs_repositories }},{{ virgo_config_cvmfs_repo.repository_name }}
+  when: virgo_config_cvmfs_repo.repository_name
   tags: virgo_config_cvmfs_repo
 
-- name: create/update file {{virgo_config_cvmfs_repo.public_key_path}}
+- name: create/update file {{ virgo_config_cvmfs_repo.public_key_path }}
   lineinfile:
-    dest: "{{virgo_config_cvmfs_repo.public_key_path}}"
+    dest: "{{ virgo_config_cvmfs_repo.public_key_path }}"
     create: yes
     line: "{{ item }}"
-  with_items: 
+  with_items:
     - "{{ virgo_config_cvmfs_repo.public_key.split('\n') }}"
-  when: virgo_config_cvmfs_repo.repository_name != ""
+  when: virgo_config_cvmfs_repo.repository_name
   tags: virgo_config_cvmfs_repo
 
-- name: create/update file {{virgo_config_cvmfs_repo.public_key_path}} from URL
+- name: create/update file {{ virgo_config_cvmfs_repo.public_key_path }} from URL
   get_url:
     url: "{{ virgo_config_cvmfs_repo.public_key_url }}"
-    dest: "{{virgo_config_cvmfs_repo.public_key_path}}"
+    dest: "{{ virgo_config_cvmfs_repo.public_key_path }}"
     force: yes
-  when: virgo_config_cvmfs_repo.repository_name != "" and virgo_config_cvmfs_repo.public_key_url != ""
+  when: virgo_config_cvmfs_repo.repository_name and virgo_config_cvmfs_repo.public_key_url
   tags: virgo_config_cvmfs_repo
 
 - name: set local VIRGO_SERVER_URL variable
   blockinfile:
-    dest: /etc/cvmfs/config.d/{{virgo_config_cvmfs_repo.repository_name}}.conf
+    dest: /etc/cvmfs/config.d/{{ virgo_config_cvmfs_repo.repository_name }}.conf
     create: yes
     content: |
-      CVMFS_SERVER_URL={{virgo_config_cvmfs_repo.server_url}}
-      CVMFS_PUBLIC_KEY={{virgo_config_cvmfs_repo.public_key_path}}
-      CVMFS_HTTP_PROXY={{virgo_config_cvmfs_default_http_proxy}}
-  when: virgo_config_cvmfs_repo.repository_name != ""
+      CVMFS_SERVER_URL={{ virgo_config_cvmfs_repo.server_url }}
+      CVMFS_PUBLIC_KEY={{ virgo_config_cvmfs_repo.public_key_path }}
+      CVMFS_HTTP_PROXY={{ virgo_config_cvmfs_default_http_proxy }}
+  when: virgo_config_cvmfs_repo.repository_name
   tags: virgo_config_cvmfs_repo
 
 # SV: questa parte non capisco bene a cosa serva...
@@ -128,17 +128,17 @@
 #  tags: virgo_config_cvmfs_repo
 
 - name: wait for virgo squid to be up and running (ansible > 2.1.0.0)
-  wait_for: 
-     host: "{{virgo_default_squid}}" 
-     port: "{{virgo_default_squid_port}}"
+  wait_for:
+     host: "{{ virgo_default_squid }}"
+     port: "{{ virgo_default_squid_port }}"
      delay: 20
      timeout: 600
   when: ansible_version > "2.1.0.0"
   tags:
     - virgo_config
 
-- name: wait for virgo squid to be up and running using nc 
-  command: nc -z {{virgo_default_squid}} {{virgo_default_squid_port}}
+- name: wait for virgo squid to be up and running using nc
+  command: nc -z {{ virgo_default_squid }} {{ virgo_default_squid_port }}
   register: result
   until: result.rc == 0
   delay: 20
@@ -163,8 +163,8 @@
   tags: virgo_config
 
 - name: Creates CVMFS local repo
-  file: path=/cvmfs/{{virgo_config_cvmfs_repo.repository_name}} state=directory owner=cvmfs group=cvmfs recurse=yes
-  when: virgo_config_cvmfs_repo.repository_name != ""
+  file: path=/cvmfs/{{ virgo_config_cvmfs_repo.repository_name }} state=directory owner=cvmfs group=cvmfs recurse=yes
+  when: virgo_config_cvmfs_repo.repository_name
   tags: virgo_config_cvmfs_repo
 
 # SV: anche questo mi sa che non serve
@@ -178,24 +178,24 @@
 
 # Remove cvmfs folder from mlocate check
 - name: Remove cvmfs folder from mlocate check
-  lineinfile: 
-      dest: /etc/updatedb.conf 
-      regexp: '^PRUNEPATHS=' 
+  lineinfile:
+      dest: /etc/updatedb.conf
+      regexp: '^PRUNEPATHS='
       line: 'PRUNEPATHS="/tmp /var/spool /media /home/.ecryptfs /var/lib/schroot /cvmfs"'
 
 - name: mount CVMFS local repo
   mount:
     # path: "/cvmfs/{{ams_config_cvmfs_repo.repository_name}}"  # Only in ansible >= 2.3
     # dest: "/cvmfs/{{ams_config_cvmfs_repo.repository_name}}"  # for ansible < 2.3
-    name: "/cvmfs/{{virgo_config_cvmfs_repo.repository_name}}"  # Compatible with all ansible (it's an alias)
-    src: "{{virgo_config_cvmfs_repo.repository_name}}"
+    name: "/cvmfs/{{ virgo_config_cvmfs_repo.repository_name }}"  # Compatible with all ansible (it's an alias)
+    src: "{{ virgo_config_cvmfs_repo.repository_name }}"
     fstype: cvmfs
     state: mounted
   register: result
   until: result | success
   retries: 10
   delay: 10
-  when: virgo_config_cvmfs_repo.repository_name != ""
+  when: virgo_config_cvmfs_repo.repository_name
   tags: virgo_config_cvmfs_repo
 
 # SV: non ci serve

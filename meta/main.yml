@@ -10,7 +10,7 @@ galaxy_info:
   - name: Ubuntu
     versions:
     - trusty
-  galaxy_tags: 
+  galaxy_tags:
    - virgo
    - cvmfs
 
