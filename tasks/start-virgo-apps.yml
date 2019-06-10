@@ -1,7 +1,20 @@
 ---
 
+#- name: ping marathon consul to check if it is ready
+#  shell: "curl --silent -k -u {{ marathon_username }}:{{ marathon_password }} {{ marathon_protocol }}://marathon.service.consul:{{ marathon_port }}/ping"
+#  register: result_ping
+#  until: result_ping.stdout.find("pong") != -1
+#  retries: 20
+#  delay: 30
+
 - name: ping marathon consul to check if it is ready
-  shell: "curl --silent -k -u {{ marathon_username }}:{{ marathon_password }} {{ marathon_protocol }}://marathon.service.consul:{{ marathon_port }}/ping"
+  uri:
+    url: "{{ marathon_protocol }}://marathon.service.consul:{{ marathon_port }}/ping"
+    force_basic_auth: yes
+    user: "{{ marathon_username }}"
+    password: "{{ marathon_password }}"
+    validate_certs: no
+    method: GET
   register: result_ping
   until: result_ping.stdout.find("pong") != -1
   retries: 20
