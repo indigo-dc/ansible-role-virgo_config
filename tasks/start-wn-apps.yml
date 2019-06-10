@@ -1,7 +1,7 @@
 ---
 
 - name: ping marathon consul to check if it is ready
-  shell: "curl --silent -k -u {{marathon_username}}:{{marathon_password}} {{marathon_protocol}}://marathon.service.consul:{{marathon_port}}/ping"
+  shell: "curl --silent -k -u {{ marathon_username }}:{{ marathon_password }} {{ marathon_protocol }}://marathon.service.consul:{{ marathon_port }}/ping"
   register: result_ping
   until: result_ping.stdout.find("pong") != -1
   retries: 20
@@ -11,10 +11,10 @@
 - name: start VIRGO worker nodes
   run_once: true
   uri:
-    url: "{{marathon_protocol}}://marathon.service.consul:{{marathon_port}}/v2/apps/condorwn?force=true"
+    url: "{{ marathon_protocol }}://marathon.service.consul:{{ marathon_port }}/v2/apps/condorwn?force=true"
     force_basic_auth: yes
-    user: "{{marathon_username}}"
-    password: "{{marathon_password}}"
+    user: "{{ marathon_username }}"
+    password: "{{ marathon_password }}"
     validate_certs: no
     method: PUT
     headers:
@@ -35,10 +35,10 @@
 
 - name: start VIRGO cvmfs check
   run_once: true
-  uri: 
-     url: "{{marathon_protocol}}://marathon.service.consul:{{marathon_port}}/v2/apps/cvmfscheck"
-     user: "{{marathon_username}}"
-     password: "{{marathon_password}}"
+  uri:
+     url: "{{ marathon_protocol }}://marathon.service.consul:{{ marathon_port }}/v2/apps/cvmfscheck"
+     user: "{{ marathon_username }}"
+     password: "{{ marathon_password }}"
      validate_certs: "no"
      method: PUT
      HEADER_Content-Type: "application/json"

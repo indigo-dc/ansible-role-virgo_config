@@ -1,7 +1,7 @@
 ---
 
 - name: ping marathon consul to check if it is ready
-  shell: "curl --silent -k -u {{marathon_username}}:{{marathon_password}} {{marathon_protocol}}://marathon.service.consul:{{marathon_port}}/ping"
+  shell: "curl --silent -k -u {{ marathon_username }}:{{ marathon_password }} {{ marathon_protocol }}://marathon.service.consul:{{ marathon_port }}/ping"
   register: result_ping
   until: result_ping.stdout.find("pong") != -1
   retries: 20
@@ -9,11 +9,11 @@
 
 - name: start VIRGO squid
   run_once: true
-  uri: 
-    url: "{{marathon_protocol}}://marathon.service.consul:{{marathon_port}}/v2/apps/virgosquid"
+  uri:
+    url: "{{ marathon_protocol }}://marathon.service.consul:{{ marathon_port }}/v2/apps/virgosquid"
     force_basic_auth: yes
-    user: "{{marathon_username}}"
-    password: "{{marathon_password}}"
+    user: "{{ marathon_username }}"
+    password: "{{ marathon_password }}"
     validate_certs: no
     method: PUT
     headers:
@@ -28,10 +28,10 @@
   tags:
     - virgo_apps
 
-- name: wait for virgo squid to be up and running 
-  wait_for: 
-     host: "{{virgo_default_squid}}" 
-     port: "{{virgo_default_squid_port}}"
+- name: wait for virgo squid to be up and running
+  wait_for:
+     host: "{{ virgo_default_squid }}"
+     port: "{{ virgo_default_squid_port }}"
      delay: 20
      timeout: 600
      connect_timeout: 10
