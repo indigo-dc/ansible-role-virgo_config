@@ -64,7 +64,7 @@
     content: |
       CVMFS_HTTP_PROXY={{ virgo_config_cvmfs_default_http_proxy }}
       CVMFS_REPOSITORIES={{ virgo_config_cvmfs_repositories }}
-  when: not virgo_config_cvmfs_repo.repository_name
+  when: not {{ virgo_config_cvmfs_repo.repository_name }}
   tags: virgo_config
 
 - name: create/update file /etc/cvmfs/default.local with defined virgo repo
