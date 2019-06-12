@@ -18,13 +18,6 @@ virgo_config_mysquid_host: "localhost"
 virgo_default_squid_port: 3128
 virgo_config_mysquid: "http://{{virgo_default_squid}}:{{virgo_default_squid_port}}"
 
-virgo_repo_server_url: ""
-virgo_repo_public_key_path: ""
-virgo_repo_repository_name: "virgo.test.to.infn.it"
-virgo_repo_public_key: ""
-virgo_repo_public_key_url: ""
-virgo_default_squid: "localhost"
-
 virgo_config_cvmfs_repo:
   server_url: "{{virgo_repo_server_url}}"
   public_key_path: "{{virgo_repo_public_key_path}}"
