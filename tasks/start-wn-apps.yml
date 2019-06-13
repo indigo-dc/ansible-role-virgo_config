@@ -15,8 +15,9 @@
     password: "{{ marathon_password }}"
     validate_certs: no
     method: GET
+    return_content: yes
   register: result_ping
-  until: result_ping.stdout.find("pong") != -1
+  until: result_ping.content.find("pong") != -1
   retries: 20
   delay: 30
 
