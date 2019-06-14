@@ -1,8 +1,8 @@
 {
   "id": "condorwn",
-  "cpus": {{htcondor_docker_cpu_x_wn}},
-  "mem": {{htcondor_docker_ram_x_wn}},
-  "instances": {{htcondor_initial_number_of_slaves}},
+  "cpus": {{virgo_docker_cpu_x_wn}},
+  "mem": {{virgo_docker_ram_x_wn}},
+  "instances": {{virgo_number_of_slaves}},
   "container": {
     "type": "DOCKER",
     "docker": {
@@ -22,7 +22,7 @@
   "healthChecks": [],
   "env": {
     "CONDOR_HOST": "{{ condor_host }}",
-    "SLOT_TYPE_1": "cpus={{htcondor_cpu_x_wn}}, mem={{htcondor_ram_x_wn}}",
+    "SLOT_TYPE_1": "cpus={{virgo_cpu_x_wn}}, mem={{virgo_ram_x_wn}}",
     "ZOOKEEPER_HOST_LIST": "{{ zookeeper_peers }}",
     "CCB_ADDRESS": "{{ ccb_address }}",
     "PROXY_CACHE": "{{ proxycache_host }}:{{config_proxycache_serviceport}}"
