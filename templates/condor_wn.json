@@ -1,6 +1,6 @@
 {
   "id": "condorwn",
-  "cpus": {{virgo_docker_cpu_x_wn}},
+  "cpus": {{docker_cpu_x_wn}},
   "mem": {{virgo_docker_ram_x_wn}},
   "instances": {{virgo_number_of_slaves}},
   "container": {
