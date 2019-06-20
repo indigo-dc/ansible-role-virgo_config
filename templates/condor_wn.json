@@ -19,7 +19,20 @@
       }
     ]
   },
-  "healthChecks": [],
+  "healthChecks": [
+    {
+      "command": {
+        "value": "dodas_check_condor_processes condor_startd"
+        },
+      "gracePeriodSeconds": 300,
+      "intervalSeconds": 60,
+      "maxConsecutiveFailures": 3,
+      "protocol": "COMMAND",
+      "ipProtocol": "IPv4",
+      "timeoutSeconds": 20,
+      "delaySeconds": 15
+    }
+  ],
   "env": {
     "CONDOR_HOST": "{{ condor_host }}",
     "SLOT_TYPE_1": "cpus={{cpu_x_wn}}, mem={{ram_x_wn}}",
