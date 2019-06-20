@@ -25,7 +25,7 @@ virgo_config_cvmfs_repo:
   public_key: "{{virgo_repo_public_key}}"
   public_key_url: "{{virgo_repo_public_key_url}}"
 
-virgo_config_cvmfs_debug: False
+virgo_config_cvmfs_debug: True
 
 virgo_config_squid_image: "spiga/frontiersquidv1"
 
@@ -33,7 +33,7 @@ virgo_config_squid_image: "spiga/frontiersquidv1"
 htcondor_config_condor_image: "dodasts/virgo"
 #number_of_wn_instances: 1
 #virgo_number_of_slaves: 2
-#virgo_cpu_x_wn: 1
-#virgo_ram_x_wn: 2000
-#virgo_docker_cpu_x_wn: 0.98
-#virgo_docker_ram_x_wn: 1999.98
+#virgo_cpu_x_wn: "{{ cpu_x_wn }}"
+#virgo_ram_x_wn: "{{ ram_x_wn }}"
+#virgo_docker_cpu_x_wn: "{{ docker_cpu_x_wn }}"
+#virgo_docker_ram_x_wn: "{{ docker_ram_x_wn }}"
